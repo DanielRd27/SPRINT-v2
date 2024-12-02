@@ -1,37 +1,75 @@
-<!-- 2ª Digitação (Aqui) -->
 <?php
-// Inicia uma sessão para armazenar informações do usuário durante a navegação.
-session_start();
-
-// Inclui o arquivo de conexão com o banco de dados.
+// Inclui o arquivo que valida a sessão do usuário
+include('valida_sessao.php');
+// Inclui o arquivo de conexão com o banco de dados
 include('conexao.php');
+
 
 // Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $usuario = $_POST['usuario'];
-    $usuario = $_POST['usuario'];
+    $id = $_POST['id'] ?? '';
+    $nome = $_POST['nome'];
+    $codigo = $_POST['codigo'];
     $usuario = $_POST['usuario'];
     $senha = $_POST['senha'];
+    $nivel = $_POST['nivel'];
 
-    // Monta a consulta SQL para verificar se o usuário existem no banco.
-    $sql = "SELECT * FROM usuarios WHERE usuario='$usuario'";
-    // Executa a consulta e armazena o resultado.
-    $result = $conn->query($sql);
 
-    // Verifica se a consulta retornou algum registro.
-    if ($result->num_rows > 0) {
-        // Se o usuário for encontrado, mensagem de error
-        $error = "Usuario ja existe";
+    // Prepara a query SQL para inserção ou atualização
+    if ($id) {
+        // Se o ID existe, é uma atualização
+        $sql = "UPDATE usuarios SET nome=?, codigo=?, usuario=?, senha=?, nivel=?";
+        $params = [$nome, $codigo, $usuario, md5($senha), $nivel];
+        $sql .= " WHERE id=?";
+        $params[] = $id;
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param(str_repeat('s', count($params)), ...$params);
+        $mensagem = "Usuario atualizado com sucesso!";
     } else {
-        // Caso não ache ninguem com esse user o adicione no banco de dados
-        $sql = "INSERT INTO usuarios (usuario, senha) VALUES ('$usuario', MD5('$senha'))";
-        $mensagem = "Fornecedor cadastrado com sucesso!";
+        // Se não há ID, é uma nova inserção
+        $sql = "INSERT INTO usuarios (nome, codigo, usuario, senha, nivel) VALUES (?, ?, ?, md5(?), ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ssssi", $nome, $codigo, $usuario, $senha, $nivel);
+        $mensagem = "Produto cadastrado com sucesso!";
     }
 
     // Executa a query e verifica se houve erro
-    if ($conn->query($sql) !== TRUE) {
-        $mensagem = "Erro: " . $conn->error;
+    if ($stmt->execute()) {
+        $class = "success";
+    } else {
+        $mensagem = "Erro: " . $stmt->error;
+        $class = "error";
     }
+}
+
+// Verifica se foi solicitada a exclusão de um produto
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+    $sql = "DELETE FROM usuarios WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $delete_id);
+    if ($stmt->execute()) {
+        $mensagem = "Usuario excluído com sucesso!";
+        $class = "success";
+    } else {
+        $mensagem = "Erro ao excluir Usuario: " . $stmt->error;
+        $class = "error";
+    }
+}
+
+// Busca todos os usuarios para listar na tabela
+$usuarios = $conn->query("SELECT * FROM usuarios");
+
+// Se foi solicitada a edição de um produto, busca os dados dele
+$produto = null;
+if (isset($_GET['edit_id'])) {
+    $edit_id = $_GET['edit_id'];
+    $stmt = $conn->prepare("SELECT * FROM usuarios WHERE id=?");
+    $stmt->bind_param("i", $edit_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $produto = $result->fetch_assoc();
+    $stmt->close();
 }
 
 ?>
@@ -83,8 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <label for="nivel">Nivel:</label>
                     <select name="nivel" required>
-                        <option value="">1</option>
-                        <option value="">2</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
                     </select>
 
                     <br>
@@ -108,23 +148,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <th>Código</th>
                             <th>Nome</th>
                             <th>Usuario</th>
-                            <th>Senha</th>
                             <th>Nivel</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = $produtos->fetch_assoc()): ?>
+                        <?php while ($row = $usuarios->fetch_assoc()): ?>
                         <tr>
                             <td><?php echo $row['id']; ?></td>
                             <td><?php echo $row['codigo']; ?></td>
                             <td><?php echo $row['nome']; ?></td>
                             <td><?php echo $row['usuario']; ?></td>
-                            <td><?php echo $row['senha']; ?></td>
                             <td><?php echo $row['nivel']; ?></td>
 
                             <td>
-                                <a href="cadastro_produto.php?edit_id=<?php echo $row['id']; ?>">Editar</a>
+                                <a href="cadastro_usuario.php?edit_id=<?php echo $row['id']; ?>">Editar</a>
                                 <a href="?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
                             </td>
                         </tr>

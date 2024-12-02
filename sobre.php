@@ -42,7 +42,7 @@
                     <!-- Link para redirecionar para a Pagina de Cadastro -->
                     <a href="cadastro_usuario.php">    
                         <!-- Botão chamativo para fazer o Cadastro -->
-                        <button class="uppercase bold botão_redirecionarCadastro">Crie uma conta e começe já !!</button>
+                        <button class="uppercase bold botão_redirecionarCadastro">Crie uma conta e comece já !!</button>
                     </a>
                 </section>
             </section>

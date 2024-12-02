@@ -4,6 +4,11 @@ include('valida_sessao.php');
 // Inclui o arquivo de conexão com o banco de dados
 include('conexao.php');
 
+if (!$_SESSION['acesso_CadProduto']) {
+    // Se o usuário não tem acesso joga pro idenx
+    header('Location: index.php');
+}
+
 // Função para redimensionar e salvar a imagem
 function redimensionarESalvarImagem($arquivo, $largura = 80, $altura = 80) {
     $diretorio_destino = "img/";

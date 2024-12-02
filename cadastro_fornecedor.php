@@ -4,6 +4,11 @@ include('valida_sessao.php');
 // Inclui o arquivo de conexão com o banco de dados
 include('conexao.php');
 
+if (!$_SESSION['acesso_CadFornecedor']) {
+    // Se o usuário não tem acesso joga pro idenx
+    header('Location: index.php');
+}
+
 // Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = $_POST['id'];

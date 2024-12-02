@@ -21,7 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Verifica se a consulta retornou algum registro.
     if ($result->num_rows > 0) {
         // Se o usuário for encontrado, armazena seu nome na sessão.
+
+        $row = $result->fetch_assoc();
+        
         $_SESSION['usuario'] = $usuario;
+        $_SESSION['nivel'] = $row['nivel'];
         // Redireciona o usuário para a página inicial.
         header('Location: index.php');
     } else {
