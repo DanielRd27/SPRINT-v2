@@ -4,7 +4,7 @@ include('valida_sessao.php');
 // Inclui o arquivo de conexão com o banco de dados
 include('conexao.php');
 
-if (!$_SESSION['acesso_CadProduto']) {
+if (!$_SESSION['acesso_CadProdutos']) {
     // Se o usuário não tem acesso joga pro idenx
     header('Location: index.php');
 }

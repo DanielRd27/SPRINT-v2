@@ -4,6 +4,18 @@ include('valida_sessao.php');
 // Inclui o arquivo de conexão com o banco de dados
 include('conexao.php');
 
+$permissoes = [
+    // ações
+    'acoes' => false,
+];
+
+if ($_SESSION['nivel'] > 0) { 
+    // Usuários de nível 2, 3 e 4 têm acesso limitado
+    $permissoes = [
+        'acoes' => $_SESSION['nivel'] <= 3,
+    ];
+}
+
 // Verifica se foi solicitada a exclusão de um produto
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
@@ -20,7 +32,7 @@ if (isset($_GET['delete_id'])) {
 }
 
 // Busca todos os produtos para listar na tabela
-$produtos = $conn->query("SELECT p.id, p.nome, p.descricao, p.preco, p.imagem, f.nome AS fornecedor_nome FROM produtos p JOIN fornecedores f ON p.fornecedor_id = f.id");
+$produtos = $conn->query("SELECT p.id,  p.codigo, p.nome, p.descricao, p.preco, p.quantidade, p.imagem, f.nome AS fornecedor_nome FROM produtos p JOIN fornecedores f ON p.fornecedor_id = f.id");
 
 // Se foi solicitada a edição de um produto, busca os dados dele
 $produto = null;
@@ -97,10 +109,12 @@ if (isset($_GET['edit_id'])) {
                                     Sem imagem
                                 <?php endif; ?>
                             </td>
-                            <td>
-                                <a href="cadastro_produto.php?edit_id=<?php echo $row['id']; ?>">Editar</a>
-                                <a href="?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
-                            </td>
+                            <?php if($permissoes['acoes']): ?>
+                                <td>
+                                    <a href="cadastro_produto.php?edit_id=<?php echo $row['id']; ?>">Editar</a>
+                                    <a href="?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>

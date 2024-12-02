@@ -4,6 +4,18 @@ include('valida_sessao.php');
 // Inclui o arquivo de conexão com o banco de dados
 include('conexao.php');
 
+$permissoes = [
+    // ações
+    'acoes' => false,
+];
+
+if ($_SESSION['nivel'] > 0) { 
+    // Usuários de nível 2, 3 e 4 têm acesso limitado
+    $permissoes = [
+        'acoes' => $_SESSION['nivel'] <= 2,
+    ];
+}
+
 // Verifica se foi solicitada a exclusão de um fornecedor
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
@@ -66,7 +78,9 @@ $fornecedores = $conn->query("SELECT * FROM fornecedores");
                         <th>Endereço</th>
                         <th>CNPJ</th>
                         <th>Obs</th>
-                        <th>Ações</th>
+                        <?php if($permissoes['acoes']): ?>
+                            <th>Ações</th>
+                        <?php endif; ?>
                     </tr>
                     <?php while ($row = $fornecedores->fetch_assoc()): ?>
                     <tr>
@@ -77,10 +91,12 @@ $fornecedores = $conn->query("SELECT * FROM fornecedores");
                         <td><?php echo $row['endereco']; ?></td>
                         <td><?php echo $row['cnpj']; ?></td>
                         <td><?php echo $row['observacoes']; ?></td>
-                        <td>
-                            <a href="cadastro_fornecedor.php?edit_id=<?php echo $row['id']; ?>">Editar</a>
-                            <a href="?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
-                        </td>
+                        <?php if($permissoes['acoes']): ?>
+                            <td>
+                                <a href="cadastro_fornecedor.php?edit_id=<?php echo $row['id']; ?>">Editar</a>
+                                <a href="?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                            </td>
+                        <?php endif; ?>
                     </tr>
                     <?php endwhile; ?>
                 </table>
