@@ -15,8 +15,11 @@ CREATE DATABASE sistema CHARACTER SET utf8mb4;
 -- Expressão SQL para criar a tabela de usuários
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(20) NOT NULL,
+    nome VARCHAR(50) NOT NULL,
     usuario VARCHAR(50) NOT NULL,
-    senha VARCHAR(255) NOT NULL
+    senha VARCHAR(255) NOT NULL,
+    nivel INT NOT NULL
 );
 
 ```

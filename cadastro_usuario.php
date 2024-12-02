@@ -9,6 +9,8 @@ include('conexao.php');
 // Verifica se o formulário foi enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $usuario = $_POST['usuario'];
+    $usuario = $_POST['usuario'];
+    $usuario = $_POST['usuario'];
     $senha = $_POST['senha'];
 
     // Monta a consulta SQL para verificar se o usuário existem no banco.
@@ -37,13 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Login FutureByte</title>
 </head>
 <body class="imagem_fundo">
-    <header>
+    <header class="fundo_headerTransparente">
         <div class="logo_container fundo_headerTransparente">
             <div class="Logo">
                 <img src="img/logo.png" alt="">
@@ -51,48 +53,93 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <nav>
-                <a href="sobre.php" class="uppercase bold">Sobre</a>
-                <a href="#" class="uppercase bold">Contato</a>
-                <a href="login.php" class="uppercase bold">Login</a>
+                <a href="tabelas.php" class="uppercase bold">Tabelas</a>
+                <a href="index.php" class="uppercase bold">Home</a>
+                <a href="cadastrar_dados.php" class="uppercase bold">Cadastro</a>
+                <a href="logout.php" class="uppercase bold">Sair</a>
             </nav>
         </div>
-    </header class="fundo_headerTransparente">
+    </header>
 
     <main>
-        <div class="container login_container">
-            <div class="card_login">
-                <!-- Titulo -->
-                <h1 class="uppercase noMargin">Cadastro</h1>
+        <div class="container">
+            <section class="formulario">
+                <h2>Cadastro de Fornecedor</h2>
+                <!-- Formulário para cadastro/edição de fornecedor -->
+                <form method="post" action="" enctype="multipart/form-data" class="formularios_posLogin">
+                    <input type="hidden" name="id" value="<?php echo $produto['id'] ?? ''; ?>">
+                    
+                    <label for="nome">Nome:</label>
+                    <input type="text" name="nome" value="<?php echo $produto['nome'] ?? ''; ?>" required>
 
-                <!-- Textinho com orientação -->
-                <p class="noMargin">Por favor, insira sua senha e login para continuar.</p>
+                    <label for="codigo">Código:</label>
+                    <input type="text" name="codigo" value="<?php echo $produto['codigo'] ?? ''; ?>" required>
 
-                <form method="post" action="">
-                    <!-- Inputs -->
-                    <input type="text" placeholder="Usuario / Email" name="usuario" require>
-                    <input type="password" placeholder="Senha" name="senha" require>
+                    <label for="usuario">Usuario:</label>
+                    <input type="text" name="usuario" value="<?php echo $produto['usuario'] ?? ''; ?>" required>
 
-                    <!-- Esqueceu sua senha? (isso nao funciona) -->
-                    <u><i>Não esqueça de confirir a senha</i></u>
+                    <label for="senha">Senha:</label>
+                    <input type="text" name="senha" value="<?php echo $produto['senha'] ?? ''; ?>" required>
 
-                    <!-- Botão de login -->
-                    <button type="submit">Cadastrar-se</button>
+                    <label for="nivel">Nivel:</label>
+                    <select name="nivel" required>
+                        <option value="">1</option>
+                        <option value="">2</option>
+                    </select>
 
-                    <!-- Exibe a mensagem de erro, se houver. -->
-                    <?php
-                        if (isset($mensagem)) echo "<p class='message' " . (strpos($mensagem, 'Erro') !== false ? "error" : "success") . "'>$mensagem</p>";
-                        if (isset($mensagem_erro)) echo "<p class='error'>$mensagem_erro</p>";
-                    ?>
+                    <br>
+                    <button type="submit"><?php echo $produto ? 'Atualizar' : 'Cadastrar'; ?></button>
                 </form>
+                
+                <!-- Exibe mensagens de sucesso ou erro -->
+                <?php
+                if (isset($mensagem)) echo "<p class='message success bold uppercase'" . (strpos($mensagem, 'Erro') !== false ? "error" : "success") . "'>$mensagem</p>";
+                if (isset($mensagem_erro)) echo "<p class='message error bold uppercase'>$mensagem_erro</p>";
+                ?>
+            </section>
 
-                <!-- Redirecionar para a pagina de cadastro -->
-                <p><i>Já tem uma conta?</i> <a href="login.php"><i><u>Entre Nela</u></i></a></p>
-            </div>
+            <section class="tabela">
+                <h2>Listagem de Usuarios</h2>
+                <!-- Tabela para listar os produtos cadastrados -->
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Código</th>
+                            <th>Nome</th>
+                            <th>Usuario</th>
+                            <th>Senha</th>
+                            <th>Nivel</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $produtos->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo $row['id']; ?></td>
+                            <td><?php echo $row['codigo']; ?></td>
+                            <td><?php echo $row['nome']; ?></td>
+                            <td><?php echo $row['usuario']; ?></td>
+                            <td><?php echo $row['senha']; ?></td>
+                            <td><?php echo $row['nivel']; ?></td>
+
+                            <td>
+                                <a href="cadastro_produto.php?edit_id=<?php echo $row['id']; ?>">Editar</a>
+                                <a href="?delete_id=<?php echo $row['id']; ?>" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+                <div class="actions">
+                    <a href="index.php" class="back-button"><button>Voltar</button></a>
+                </div>
+            </section>
         </div>
     </main>
 
     <footer class="fundo_footerTransparente">
-        <div class="container">
+        <div class="container ">
             <p>FutureByte © 2024 - Todos os direitos reservados</p>
         </div>
     </footer>
