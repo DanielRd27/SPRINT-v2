@@ -95,9 +95,12 @@ if (isset($_GET['edit_id'])) {
             </div>
 
             <nav>
-                <a href="tabelas.php" class="uppercase bold">Tabelas</a>
                 <a href="index.php" class="uppercase bold">Home</a>
-                <a href="cadastrar_dados.php" class="uppercase bold">Cadastro</a>
+
+                <?php if($_SESSION['acesso_CadUsuario']): ?>
+                    <a href="cadastro_usuario.php" class="uppercase bold">Cadastrar-Funcionario</a>
+                <?php endif; ?>
+
                 <a href="logout.php" class="uppercase bold">Sair</a>
             </nav>
         </div>
@@ -106,7 +109,7 @@ if (isset($_GET['edit_id'])) {
     <main>
         <div class="container">
             <section class="formulario">
-                <h2>Cadastro de Fornecedor</h2>
+                <h2>Cadastro de Funcionario/Usuario</h2>
                 <!-- Formulário para cadastro/edição de fornecedor -->
                 <form method="post" action="" enctype="multipart/form-data" class="formularios_posLogin">
                     <input type="hidden" name="id" value="<?php echo $produto['id'] ?? ''; ?>">

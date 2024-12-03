@@ -52,8 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
 
             <nav>
-                <a href="sobre.php" class="uppercase bold">Sobre</a>
-                <a href="#" class="uppercase bold">Contato</a>
                 <a href="login.php" class="uppercase bold">Login</a>
             </nav>
         </div>
@@ -84,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </form>
 
                 <!-- Redirecionar para a pagina de cadastro -->
-                <p><i>Não Tem Uma Conta Ainda?</i> <a href="cadastro_usuario.php"><i><u>Crie Uma</u></i></a></p>
+                <p><i>Não Tem Uma Conta Ainda? Peça para seu superior</i></p>
             </div>
         </div>
     </main>

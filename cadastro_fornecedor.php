@@ -46,7 +46,7 @@ if (isset($_GET['delete_id'])) {
     $check_produtos = $conn->query("SELECT COUNT(*) as count FROM produtos WHERE fornecedor_id = '$delete_id'")->fetch_assoc();
     
     if ($check_produtos['count'] > 0) {
-        $mensagem = "Não é possível excluir este fornecedor pois existem produtos cadastrados para ele.";
+        $mensagem = "Erro: Não é possível excluir este fornecedor pois existem produtos cadastrados para ele.";
     } else {
         $sql = "DELETE FROM fornecedores WHERE id='$delete_id'";
         if ($conn->query($sql) === TRUE) {
@@ -85,9 +85,12 @@ if (isset($_GET['edit_id'])) {
             </div>
 
             <nav>
-                <a href="tabelas.php" class="uppercase bold">Tabelas</a>
                 <a href="index.php" class="uppercase bold">Home</a>
-                <a href="cadastrar_dados.php" class="uppercase bold">Cadastro</a>
+
+                <?php if($_SESSION['acesso_CadUsuario']): ?>
+                    <a href="cadastro_usuario.php" class="uppercase bold">Cadastrar-Funcionario</a>
+                <?php endif; ?>
+
                 <a href="logout.php" class="uppercase bold">Sair</a>
             </nav>
         </div>
@@ -125,8 +128,14 @@ if (isset($_GET['edit_id'])) {
                 
                 <!-- Exibe mensagens de sucesso ou erro -->
                 <?php
-                if (isset($mensagem)) echo "<p class='success bold uppercase'" . (strpos($mensagem, 'Erro') !== false ? "error" : "success") . "'>$mensagem</p>";
-                if (isset($mensagem_erro)) echo "<p class='error bold uppercase'>$mensagem_erro</p>";
+                    if (isset($mensagem)) {
+                        $classe = (strpos($mensagem, 'Erro') !== false) ? "error" : "success";
+                        echo "<p class='$classe bold uppercase'>$mensagem</p>";
+                    }
+                    
+                    if (isset($mensagem_erro)) {
+                        echo "<p class='error bold uppercase'>$mensagem_erro</p>";
+                    }
                 ?>
             </section>
 

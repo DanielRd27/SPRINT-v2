@@ -561,11 +561,11 @@ label {
 }
 
 .success {
-    color: rgb(4, 196, 255)  ;
+    background-color: green;
 }
 
 .error {
-    color: red;
+    background-color: red;
 }
 
 /* Fim form */
@@ -648,4 +648,29 @@ label {
     .tabela {
         margin-bottom: 3.5rem;
         overflow-x: auto;
+    }
+
+    table td a {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 2px;
+        background-color: #3498db;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+    
+    table td a:hover {
+        background-color: #2980b9;
+    }
+    
+    /* Estilo específico para o botão Excluir */
+    table td a:last-child {
+        background-color: #e74c3c;
+    }
+    
+    table td a:last-child:hover {
+        background-color: #c0392b;
     }
