@@ -1,4 +1,3 @@
-<!-- 2ª Digitação (Aqui) -->
 <?php
 // Inicia uma sessão para armazenar informações do usuário durante a navegação.
 session_start();
