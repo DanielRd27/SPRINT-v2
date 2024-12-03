@@ -20,10 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Verifica se a consulta retornou algum registro.
     if ($result->num_rows > 0) {
         // Se o usuário for encontrado, armazena seu nome na sessão.
-
-        $row = $result->fetch_assoc();
-        
         $_SESSION['usuario'] = $usuario;
+
+        // Busca o dado nivel do usuario e armazena seu nivel de acesso
+        $row = $result->fetch_assoc();
         $_SESSION['nivel'] = $row['nivel'];
         // Redireciona o usuário para a página inicial.
         header('Location: index.php');
