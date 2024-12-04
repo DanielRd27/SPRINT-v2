@@ -3,7 +3,7 @@
 ### Criaçao do Banco de dados
 ```sql
 
-CREATE DATABASE sistema CHARACTER SET utf8mb4;
+CREATE DATABASE sprint1daV2 CHARACTER SET utf8mb4;
 
 ```
 
